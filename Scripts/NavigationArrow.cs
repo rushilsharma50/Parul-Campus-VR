@@ -2,15 +2,26 @@ using UnityEngine;
 
 public class NavigationArrow : MonoBehaviour
 {
-    public StreetViewNode currentNode; // Where we are now
-    public StreetViewNode targetNode;  // Where this arrow leads
+    // The variable is named 'targetNode', so we must use this name below
+    public StreetViewNode targetNode; 
+    private IndoorManager manager;
 
-    void OnMouseDown()
+    void Start()
     {
-        // 1. Turn off the old spot
-        currentNode.OnExitNode();
+        manager = FindObjectOfType<IndoorManager>();
+    }
 
-        // 2. Turn on the new spot
-        targetNode.OnEnterNode();
+    public void OnVRInteract() 
+    {
+        // FIX: Changed 'entryNode' to 'targetNode'
+        if (targetNode == null) 
+        {
+            Debug.LogError($"Arrow {name} has no Target Node assigned!");
+            return;
+        }
+
+        // We don't need SwitchToIndoor() here because if you can see 
+        // the arrow, you are ALREADY indoors.
+        manager.EnterNode(targetNode);
     }
 }

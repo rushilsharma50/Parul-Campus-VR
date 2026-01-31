@@ -1,8 +1,9 @@
 using UnityEngine;
 
-public class LocationTrigger : MonoBehaviour
+public class LocationPin : MonoBehaviour
 {
-    public StreetViewNode entryNode;
+    public StreetViewNode entryNode; // First room of that building
+
     private IndoorManager manager;
 
     void Start()

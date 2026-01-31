@@ -2,33 +2,21 @@ using UnityEngine;
 
 public class StreetViewNode : MonoBehaviour
 {
-    [Header("Data")]
-    public Texture skyboxTexture; // The 360 image for THIS spot
-    
-    [Header("Connections")]
-    // Drag the arrow objects that belong to this spot here.
-    // When we enter this node, we turn these ON. When we leave, we turn them OFF.
-    public GameObject[] navigationArrows; 
+    [Header("Skybox")]
+    public Texture skyboxTexture; // 360 panoramic image for this room
 
-    public void OnEnterNode()
+    [Header("Navigation Arrows")]
+    public GameObject[] arrows;
+
+    public void OnNodeEnter()
     {
-        // 1. Tell the Manager to change the Skybox to MY texture
-        IndoorManager manager = FindObjectOfType<IndoorManager>();
-        manager.ChangeSkyboxTexture(skyboxTexture);
-
-        // 2. Enable my arrows so the player can see where to go next
-        foreach (GameObject arrow in navigationArrows)
-        {
+        foreach (var arrow in arrows)
             arrow.SetActive(true);
-        }
     }
 
-    public void OnExitNode()
+    public void OnNodeExit()
     {
-        // Disable my arrows so they don't float in the next room
-        foreach (GameObject arrow in navigationArrows)
-        {
+        foreach (var arrow in arrows)
             arrow.SetActive(false);
-        }
     }
 }
