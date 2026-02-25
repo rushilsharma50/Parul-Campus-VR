@@ -6,13 +6,13 @@ Developed as an AR/VR Internship project at the Tinkering Hub, this application 
 
 ## 📸 Project Gallery
 
-![Parul University Main Gate (Aerial)](Images/Campus_Gate.jpg)
+![Parul University Main Gate (Aerial)](Images/Campus_Gate.png)
 *Aerial view of the massive 1:1 scale 3D campus featuring the main entrance.*
 
-![Parul University Front Gate Entrance](Images/Main_Gate.jpg)
+![Parul University Front Gate Entrance](Images/Main_Gate.png)
 *Ground-level perspective of the university's main entrance gate.*
 
-![PU Circle and EV Navigation](Images/PU_Circle.jpg)
+![PU Circle and EV Navigation](Images/PU_Circle.png)
 *The central 'I ❤️ PU' circle, demonstrating dynamic foliage and AI-driven EV carts.*
 
 ---
