@@ -40,9 +40,12 @@ Building a massive open-world game for a mobile VR headset required aggressive o
 3. Enable Quest Link in the headset.
 4. Press `Play` in the Unity Editor or build the Windows executable.
 
-## 👨‍💻 Author
+## 👨‍💻 Developers
 
-**Rushil Sharma** *Team Lead, AR/VR Developer Intern @ Tinkering Hub*
+**Rushil Sharma** *Team Lead, VR Developer*
+**Parth Joshi** *3D Modeler*
+**Ruchit Madhavi** *3D Modeler*
+
 *B.Tech CSE-CE, Parul University*
 
 ---
