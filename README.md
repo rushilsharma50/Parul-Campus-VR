@@ -43,7 +43,9 @@ Building a massive open-world game for a mobile VR headset required aggressive o
 ## 👨‍💻 Developers
 
 **Rushil Sharma** *Team Lead, VR Developer*
+
 **Parth Joshi** *3D Modeler*
+
 **Ruchit Madhavi** *3D Modeler*
 
 *B.Tech CSE-CE, Parul University*
