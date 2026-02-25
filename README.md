@@ -4,6 +4,19 @@ A highly optimized Virtual Reality digital twin of the Parul University campus, 
 
 Developed as an AR/VR Internship project at the Tinkering Hub, this application balances large-scale open-world rendering with strict mobile VR performance constraints.
 
+## 📸 Project Gallery
+
+![Parul University Main Gate (Aerial)](Images/Campus_Gate.jpg)
+*Aerial view of the massive 1:1 scale 3D campus featuring the main entrance.*
+
+![Parul University Front Gate Entrance](Images/Main_Gate.jpg)
+*Ground-level perspective of the university's main entrance gate.*
+
+![PU Circle and EV Navigation](Images/PU_Circle.jpg)
+*The central 'I ❤️ PU' circle, demonstrating dynamic foliage and AI-driven EV carts.*
+
+---
+
 ## ✨ Key Features
 
 * **Massive Scale Open World:** A 1:1 scale recreation of the campus, featuring custom 3D buildings and road networks.
@@ -22,7 +35,7 @@ Developed as an AR/VR Internship project at the Tinkering Hub, this application 
 ## 🚀 Technical Achievements & Optimizations
 
 Building a massive open-world game for a mobile VR headset required aggressive optimization techniques:
-1.  **Lightmap Compression:** Reduced a massive 29-hour GPU bake time down to 5 minutes by utilizing Progressive CPU baking and strategically stripping Global Illumination from complex foliage meshes.
+1.  **Lightmap Compression:** Reduced a massive GPU bake time down to 5 minutes by utilizing Progressive CPU baking and strategically stripping Global Illumination from complex foliage meshes.
 2.  **Draw Call Reduction:** Disabled static batching on heavy prefabs and implemented GPU Instancing for hundreds of dynamic trees, keeping the framerate locked at a smooth 90 FPS to prevent motion sickness.
 3.  **Anti-Aliasing for VR:** Replaced Unity's default TAA (Temporal Anti-Aliasing) with MSAA to eliminate visual ghosting and motion blur during head movement.
 
