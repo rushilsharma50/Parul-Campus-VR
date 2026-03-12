@@ -2,18 +2,27 @@ using UnityEngine;
 
 public class LocationTrigger : MonoBehaviour
 {
-    public StreetViewNode entryNode;
-    private IndoorManager manager;
+    public IndoorManager manager;
+    public StreetViewNode startingRoom;
 
-    void Start()
+    // Triggered when the player shoots it with the VR laser pointer
+    public void OnVRInteract()
     {
-        manager = FindObjectOfType<IndoorManager>();
+        if (manager != null && startingRoom != null)
+        {
+            manager.SwitchToIndoor(startingRoom);
+        }
     }
 
-    public void OnVRInteract() 
-{
-    if (entryNode == null) return;
-    manager.SwitchToIndoor();
-    manager.EnterNode(entryNode);
-}
+    // Triggered if the player physically walks into the trigger zone
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            if (manager != null && startingRoom != null)
+            {
+                manager.SwitchToIndoor(startingRoom);
+            }
+        }
+    }
 }

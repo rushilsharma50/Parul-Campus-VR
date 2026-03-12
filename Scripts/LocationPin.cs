@@ -2,19 +2,17 @@ using UnityEngine;
 
 public class LocationPin : MonoBehaviour
 {
-    public StreetViewNode entryNode; // First room of that building
+    public IndoorManager manager;
+    public StreetViewNode startingRoom;
 
-    private IndoorManager manager;
-
-    void Start()
+    // We changed this to OnVRInteract so your VRPointer can find it!
+    public void OnVRInteract()
     {
-        manager = FindObjectOfType<IndoorManager>();
+        if (manager != null && startingRoom != null)
+        {
+            manager.SwitchToIndoor(startingRoom);
+        }
+        else
+            Debug.LogError("LocationPin is missing the Manager or the Starting Room!");
     }
-
-    public void OnVRInteract() 
-{
-    if (entryNode == null) return;
-    manager.SwitchToIndoor();
-    manager.EnterNode(entryNode);
-}
 }

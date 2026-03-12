@@ -4,48 +4,40 @@ public class IndoorManager : MonoBehaviour
 {
     [Header("VR Components")]
     [Tooltip("The script attached to OVRCameraRig that handles flying.")]
-    public VRFlyCam outdoorFlyCam; 
-    
-    [Tooltip("The GameObject on your Right Controller holding the VRPointer script.")]
-    public GameObject vrPointer;   
+    public MonoBehaviour outdoorFlyCam; // Changed to MonoBehaviour so it accepts any script
+
+    [Tooltip("The GameObject on your Right Controller holding the VRPointer/Ray Interactor.")]
+    public GameObject vrPointer;
 
     [Tooltip("Assign your OVRCameraRig root object here.")]
     public Transform vrCameraRig;
 
-    [Header("Skybox Materials")]
-    public Material outdoorSkyboxMaterial;     // The default sky/Cesium sky
-    public Material indoorPanoramicMaterial;   // The material applied to the inverted sphere/skybox
-    
-    // We create an instance of the material at runtime so we don't modify the original asset
-    private Material indoorRuntimeSkybox;
-
-    [Header("Environment Roots")]
+    [Header("Environment Setup")]
     [Tooltip("Parent object of your Cesium/Outdoor world.")]
     public GameObject cesiumWorld;
-    
-    [Tooltip("Parent object of your Indoor bubbles/UI.")]
+
+    [Tooltip("Parent object containing your 360 Sphere and Arrows.")]
     public GameObject indoorUI;
+
+    [Tooltip("Drag your giant 3D Inverted Sphere here.")]
+    public MeshRenderer indoorSphereRenderer;
 
     // Track the current room
     private StreetViewNode currentNode;
 
     void Awake()
     {
-        // Create a runtime copy of the material to swap textures dynamically
-        if (indoorPanoramicMaterial != null)
+        if (indoorSphereRenderer == null)
         {
-            indoorRuntimeSkybox = new Material(indoorPanoramicMaterial);
-        }
-        else
-        {
-            Debug.LogError("IndoorManager: Missing 'Indoor Panoramic Material'. Please assign it in Inspector.");
+            Debug.LogError("IndoorManager: Missing the 'Indoor Sphere Renderer'. Please assign your 3D sphere.");
         }
 
         // Start in Outdoor Mode
-        ForceOutdoorState();
+        SwitchToOutdoor();
     }
+
     // ================= MODE CONTROL =================
-    public void SwitchToIndoor()
+    public void SwitchToIndoor(StreetViewNode startNode)
     {
         // 1. Disable Outdoor Movement
         if (outdoorFlyCam != null) outdoorFlyCam.enabled = false;
@@ -53,31 +45,22 @@ public class IndoorManager : MonoBehaviour
         // 2. Ensure Pointer is ON (to click navigation arrows)
         if (vrPointer != null) vrPointer.SetActive(true);
 
-        // 3. Swap Environments
+        // 3. Swap Environments (This saves massive amounts of RAM!)
         if (cesiumWorld != null) cesiumWorld.SetActive(false);
         if (indoorUI != null) indoorUI.SetActive(true);
 
-        // 4. Update Skybox to Indoor Material
-        RenderSettings.skybox = indoorRuntimeSkybox;
-        DynamicGI.UpdateEnvironment(); // Force lighting update
-
-        // 5. Teleport Player to Center
-        // We move the Rig to 0,0,0 because that is where we assume the Indoor Sphere is centered.
+        // 4. Teleport Player to Center of the Sphere
         if (vrCameraRig != null)
         {
-            vrCameraRig.position = Vector3.zero;
-            // Note: We generally do NOT reset rotation in VR, as it can cause nausea. 
-            // Let the user keep their head orientation.
+            vrCameraRig.position = indoorSphereRenderer.transform.position;
         }
-        // 6. Activate Current Node if exists
-        if (currentNode != null)
-        {
-            currentNode.gameObject.SetActive(true);
-            currentNode.OnNodeEnter(); // Ensure arrows are visible
-        }
+
+        // 5. Load the first room
+        EnterNode(startNode);
 
         Debug.Log("Switched to Indoor Mode");
     }
+
     public void SwitchToOutdoor()
     {
         // 1. Disable Indoor Node
@@ -91,27 +74,19 @@ public class IndoorManager : MonoBehaviour
         if (indoorUI != null) indoorUI.SetActive(false);
         if (cesiumWorld != null) cesiumWorld.SetActive(true);
 
-        // 3. Restore Outdoor Skybox
-        RenderSettings.skybox = outdoorSkyboxMaterial;
-        DynamicGI.UpdateEnvironment();
-
-        // 4. Enable Flying
+        // 3. Enable Flying
         if (outdoorFlyCam != null) outdoorFlyCam.enabled = true;
 
-        // 5. Manage Pointer
-        // KEEP the pointer active so you can click the building entrance (LocationTrigger) again.
+        // 4. Manage Pointer
         if (vrPointer != null) vrPointer.SetActive(true);
 
         Debug.Log("Switched to Outdoor Mode");
     }
+
     // ================= NODE CONTROL =================
     public void EnterNode(StreetViewNode newNode)
     {
-        if (newNode == null)
-        {
-            Debug.LogError("IndoorManager: Attempted to enter a NULL node.");
-            return;
-        }
+        if (newNode == null) return;
 
         // Deactivate previous node
         if (currentNode != null)
@@ -124,12 +99,11 @@ public class IndoorManager : MonoBehaviour
         currentNode = newNode;
         currentNode.gameObject.SetActive(true);
 
-        // Apply Texture to Skybox/Sphere
-        if (currentNode.skyboxTexture != null)
+        // Apply 8K Texture to the URP Unlit Sphere
+        if (currentNode.skyboxTexture != null && indoorSphereRenderer != null)
         {
-            // "_MainTex" is the standard property name. 
-            // If you use a custom shader, check the property name (e.g., "_Tex", "_BaseMap").
-            indoorRuntimeSkybox.SetTexture("_MainTex", currentNode.skyboxTexture);
+            // CRITICAL FIX: URP Unlit uses "_BaseMap", not "_MainTex"
+            indoorSphereRenderer.material.SetTexture("_BaseMap", currentNode.skyboxTexture);
         }
         else
         {
@@ -138,19 +112,5 @@ public class IndoorManager : MonoBehaviour
 
         // Trigger Node Logic (Show Arrows)
         currentNode.OnNodeEnter();
-    }
-
-    // ================= SAFETY / INIT =================
-
-    private void ForceOutdoorState()
-    {
-        // Reset to a known clean state
-        if (indoorUI != null) indoorUI.SetActive(false);
-        if (cesiumWorld != null) cesiumWorld.SetActive(true);
-        
-        RenderSettings.skybox = outdoorSkyboxMaterial;
-        DynamicGI.UpdateEnvironment();
-
-        if (outdoorFlyCam != null) outdoorFlyCam.enabled = true;
     }
 }
