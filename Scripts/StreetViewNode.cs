@@ -3,7 +3,7 @@ using UnityEngine;
 public class StreetViewNode : MonoBehaviour
 {
     [Header("Skybox")]
-    public Texture skyboxTexture; // 360 panoramic image for this room
+    public Texture skyboxTexture;
 
     [Header("Navigation Arrows")]
     public GameObject[] arrows;

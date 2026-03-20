@@ -109,6 +109,7 @@ public class IndoorManager : MonoBehaviour
         {
             Debug.LogWarning($"Node '{currentNode.name}' is missing a Skybox Texture!");
         }
+     
 
         // Trigger Node Logic (Show Arrows)
         currentNode.OnNodeEnter();
